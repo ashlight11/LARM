@@ -1,1 +1,1 @@
-groupe poire for UV LARM
+#groupe-poire repository for the UV-LARM
