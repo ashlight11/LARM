@@ -8,8 +8,10 @@ project(my_teleop)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  roscpp
   rospy
   std_msgs
+  sensor_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -159,7 +161,8 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  catkin_install_python(PROGRAMS
-   src/scripts/test.py
+   src/scripts/move.py
+   src/scripts/laser_listener.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
