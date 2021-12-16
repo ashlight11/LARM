@@ -23,7 +23,9 @@ from sensor_msgs.msg import LaserScan
 
 laserData = LaserScan()
 commands = Twist()
-FORWARD_SPEED_MPS = 0.5
+FORWARD_SPEED_MPS = 0.7
+TURN_SPEED_MPS = 0.2
+ANGULAR_TURN = 2
 LEFT = "LEFT"
 RIGHT = "RIGHT"
 
@@ -31,47 +33,27 @@ RIGHT = "RIGHT"
 def callback(data):
     laserData = data
 
-    mean_front_left = 0.0
-    mean_front = 0.0
-    mean_front_right = 0.0
-
-
     nb_values = len(laserData.ranges)
     right = laserData.ranges[:math.floor(nb_values/3)]
     front = laserData.ranges[math.floor(nb_values/3):math.floor(2 * nb_values/3)]
     left = laserData.ranges[math.floor(2 * nb_values/3):]
 
-    
+
     for value in front : 
         if(value < 0.5):
             if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = 0.2
-                commands.angular.z = -2
-                print("turn right")
+                commands.linear.x = TURN_SPEED_MPS
+                commands.angular.z = -ANGULAR_TURN
+                #print("turn right")
                 break;
             else :
-                commands.linear.x = 0.2
-                commands.angular.z = 2
-                print("turn left")
+                commands.linear.x = TURN_SPEED_MPS
+                commands.angular.z = ANGULAR_TURN
+                #print("turn left")
                 break;
         else :
             commands.linear.x = FORWARD_SPEED_MPS
             commands.angular.z = 0
-
-    # for index, value in enumerate(laserData.ranges) : 
-    #     if (index < math.floor(nb_values/3) and value < 0.45) :
-    #         mean_front_left = value
-    #     elif (index in range (math.floor(nb_values/3), math.floor(2 * nb_values/3)) and value < 0.35) :
-    #         mean_front = value
-    #     elif(index > math.floor(2 * nb_values/3) and value < 0.45) :
-    #         mean_front_right = value
-
-    #print("range at right ", mean_front_left)
-    #print("range in front", mean_front)
-    #print("range at left ", mean_front_right)
-
-
-    
 
 
 def move_robot(direction = None):
