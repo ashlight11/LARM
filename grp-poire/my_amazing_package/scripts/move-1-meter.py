@@ -3,6 +3,9 @@ import math, rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs import LaserScan 
 
+def callback(data):
+	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+
 # Initialize ROS::node
 rospy.init_node('move', anonymous=True)
 rospy.Subscriber("chatter" ,LaserScan , callback)
@@ -26,5 +29,3 @@ rospy.Timer( rospy.Duration(0.1), move_command, oneshot=False )
 print("Start move.py")
 rospy.spin()
 
-def callback(data):
-	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
