@@ -29,7 +29,7 @@ ANGULAR_TURN = 2
 DISTANCE = FORWARD_SPEED_MPS / 2.5
 
 
-def callback(data):
+def laserCallback(data):
     laserData = data
 
     nb_values = len(laserData.ranges)
@@ -70,7 +70,7 @@ def move_robot():
 if __name__ == '__main__':
     try:
         rospy.init_node('Listener_Mover', anonymous=True)
-        rospy.Subscriber("/scan" , LaserScan , callback)
+        rospy.Subscriber("/scan" , LaserScan , laserCallback)
         move_robot()
         # spin() enter the program in a infinite loop
         print("Start laser_listener.py")

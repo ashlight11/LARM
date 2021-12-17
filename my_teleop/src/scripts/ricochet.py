@@ -64,7 +64,7 @@ print("Start move.py")
 if __name__ == '__main__':
     try:
         # Initialize ROS::node
-        rospy.init_node('move', anonymous=True)
+        rospy.init_node('RICOCHET', anonymous=True)
         rospy.Subscriber("/scan" , LaserScan , callback)
 
         move_robot()

@@ -5,7 +5,7 @@ from sensor_msgs.msg import LaserScan
 
 laserData = LaserScan()
 commands = Twist()
-FORWARD_SPEED_MPS = 0.7
+FORWARD_SPEED_MPS = 0.1
 TURN_SPEED_MPS = 0.2
 ANGULAR_TURN = 2
 
