@@ -23,13 +23,13 @@ def callback(data):
     for value in front : 
         if(value < 0.5):
             if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = TURN_SPEED_MPS
-                commands.angular.z = -ANGULAR_TURN
+                commands.linear.x = FORWARD_SPEED_MPS / value
+                commands.angular.z = - FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn right")
                 break;
             else :
-                commands.linear.x = TURN_SPEED_MPS
-                commands.angular.z = ANGULAR_TURN
+                commands.linear.x = FORWARD_SPEED_MPS / value
+                commands.angular.z = FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn left")
                 break;
         else :
@@ -58,7 +58,7 @@ def move_robot():
 
 # spin() enter the program in a infinite loop
 print("Start move.py")
-rospy.spin()
+#rospy.spin()
 
 if __name__ == '__main__':
     try:
@@ -68,6 +68,6 @@ if __name__ == '__main__':
         move_robot()
         # spin() enter the program in a infinite loop
         print("Start move_1_meter.py")
-        #rospy.spin()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
