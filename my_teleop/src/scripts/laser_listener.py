@@ -26,8 +26,6 @@ commands = Twist()
 FORWARD_SPEED_MPS = 0.7
 TURN_SPEED_MPS = 0.2
 ANGULAR_TURN = 2
-LEFT = "LEFT"
-RIGHT = "RIGHT"
 
 
 def callback(data):
@@ -56,7 +54,7 @@ def callback(data):
             commands.angular.z = 0
 
 
-def move_robot(direction = None):
+def move_robot():
     commands.linear.x = FORWARD_SPEED_MPS
     commands.angular.z = 0
     commandPublisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
@@ -64,14 +62,13 @@ def move_robot(direction = None):
     while not rospy.is_shutdown():
         commandPublisher.publish(commands)
         rate.sleep()
-    rospy.loginfo("test : ", commands.angular.z)
-
+        
 # Initialize ROS::node
 
 
 if __name__ == '__main__':
     try:
-        rospy.init_node('Listener', anonymous=True)
+        rospy.init_node('Listener_Mover', anonymous=True)
         rospy.Subscriber("/base_scan" , LaserScan , callback)
         move_robot()
         # spin() enter the program in a infinite loop

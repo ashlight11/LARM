@@ -1,14 +1,39 @@
 #!/usr/bin/python3
-import math, rospy
+import math, rospy, numpy
 from geometry_msgs.msg import Twist
 from sensor_msgs import LaserScan 
 
-def callback(data):
-	rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
+laserData = LaserScan()
+commands = Twist()
+FORWARD_SPEED_MPS = 0.7
+TURN_SPEED_MPS = 0.2
+ANGULAR_TURN = 2
 
-# Initialize ROS::node
-rospy.init_node('move', anonymous=True)
-rospy.Subscriber("chatter" ,LaserScan , callback)
+def callback(data):
+    laserData = data
+
+    nb_values = len(laserData.ranges)
+    right = laserData.ranges[:math.floor(nb_values/3)]
+    front = laserData.ranges[math.floor(nb_values/3):math.floor(2 * nb_values/3)]
+    left = laserData.ranges[math.floor(2 * nb_values/3):]
+
+
+    for value in front : 
+        if(value < 0.5):
+            if (numpy.amax(right) > numpy.amax(left)):
+                commands.linear.x = TURN_SPEED_MPS
+                commands.angular.z = -ANGULAR_TURN
+                print("turn right")
+                break;
+            else :
+                commands.linear.x = TURN_SPEED_MPS
+                commands.angular.z = ANGULAR_TURN
+                print("turn left")
+                break;
+        else :
+            commands.linear.x = FORWARD_SPEED_MPS
+            commands.angular.z = 0
+
 
 commandPublisher = rospy.Publisher(
     '/cmd_vel_mux/input/navi',
@@ -16,16 +41,31 @@ commandPublisher = rospy.Publisher(
 )
 
 # Publish velocity commandes:
-def move_command(data):
+def move_robot():
     # Compute cmd_vel here and publish... (do not forget to reduce timer duration)
-    cmd= Twist()
-    cmd.linear.x= 0.1
-    commandPublisher.publish(cmd)
+    commands.linear.x = FORWARD_SPEED_MPS
+    commands.angular.z = 0
+    commandPublisher.publish(commands)
+    rate = rospy.Rate(10) # 10hz
+    while not rospy.is_shutdown():
+        commandPublisher.publish(commands)
+        rate.sleep()
 
 # call the move_command at a regular frequency:
-rospy.Timer( rospy.Duration(0.1), move_command, oneshot=False )
+# rospy.Timer( rospy.Duration(0.1), move_command, oneshot=False )
 
 # spin() enter the program in a infinite loop
 print("Start move.py")
 rospy.spin()
 
+if __name__ == '__main__':
+    try:
+        # Initialize ROS::node
+        rospy.init_node('move', anonymous=True)
+        rospy.Subscriber("/scan" , LaserScan , callback)
+        move_robot()
+        # spin() enter the program in a infinite loop
+        print("Start move_1_meter.py")
+        #rospy.spin()
+    except rospy.ROSInterruptException:
+        pass
