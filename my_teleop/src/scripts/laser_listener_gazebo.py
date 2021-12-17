@@ -23,9 +23,10 @@ from sensor_msgs.msg import LaserScan
 
 laserData = LaserScan()
 commands = Twist()
-FORWARD_SPEED_MPS = 0.7
+FORWARD_SPEED_MPS = 2.5
 TURN_SPEED_MPS = 0.2
 ANGULAR_TURN = 2
+DISTANCE = FORWARD_SPEED_MPS / 2.5
 
 
 def callback(data):
@@ -38,8 +39,7 @@ def callback(data):
 
 
     for value in front : 
-        print(value)
-        if(value < 0.7):
+        if(value < DISTANCE):
             if (numpy.amax(right) > numpy.amax(left)):
                 commands.linear.x = TURN_SPEED_MPS
                 commands.angular.z = -ANGULAR_TURN
@@ -70,7 +70,7 @@ def move_robot():
 if __name__ == '__main__':
     try:
         rospy.init_node('Listener_Mover', anonymous=True)
-        rospy.Subscriber("/base_scan" , LaserScan , callback)
+        rospy.Subscriber("/scan" , LaserScan , callback)
         move_robot()
         # spin() enter the program in a infinite loop
         print("Start laser_listener.py")

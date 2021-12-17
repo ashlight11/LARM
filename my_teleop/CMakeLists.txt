@@ -163,6 +163,8 @@ include_directories(
  catkin_install_python(PROGRAMS
    src/scripts/move.py
    src/scripts/laser_listener.py
+   src/scripts/laser_listener_gazebo.py
+   src/scripts/ricochet.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

@@ -2,6 +2,7 @@
 import math, rospy, numpy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan 
+from sensor_msgs.msg import PointCloud2
 
 laserData = LaserScan()
 commands = Twist()
@@ -10,35 +11,36 @@ TURN_SPEED_MPS = 0.2
 ANGULAR_TURN = 2
 
 def callback(data):
-    global commands
-    global laserData
     laserData = data
-
     nb_values = len(laserData.ranges)
-    right = laserData.ranges[:math.floor(nb_values/3)]
-    front = laserData.ranges[math.floor(nb_values/3):math.floor(2 * nb_values/3)]
-    left = laserData.ranges[math.floor(2 * nb_values/3):]
+    obstacles= []
+    
+    angle= data.angle_min
+    for aDistance in data.ranges :
+        if 0.1 < aDistance and aDistance < 5.0 :
+            aPoint= [ 
+                math.cos(angle) * aDistance, 
+                math.sin( angle ) * aDistance
+            ]
+            obstacles.append( aPoint )
+        angle+= data.angle_increment
+    rospy.loginfo( str(
+        [[ round(p[0], 2), round(p[1], 2) ] for p in  obstacles[0:10] ] 
+    ) + " ..." )
+    for point in obstacles:
+        value = PointCloud2()
+        value.data = point
+        rvizPublisher.publish(value)
 
 
-    for value in front : 
-        if(value < 0.5):
-            if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = TURN_SPEED_MPS
-                commands.angular.z = -ANGULAR_TURN
-                print("turn right")
-                break;
-            else :
-                commands.linear.x = TURN_SPEED_MPS
-                commands.angular.z = ANGULAR_TURN
-                print("turn left")
-                break;
-        else :
-            commands.linear.x = FORWARD_SPEED_MPS
-            commands.angular.z = 0
+rvizPublisher = rospy.Publisher(
+    '/RVIZ_DATA',
+    PointCloud2, queue_size=10
+)
 
 
 commandPublisher = rospy.Publisher(
-    '/cmd_vel_mux/input/navi',
+    '/cmd_vel',
     Twist, queue_size=10
 )
 
@@ -58,16 +60,16 @@ def move_robot():
 
 # spin() enter the program in a infinite loop
 print("Start move.py")
-rospy.spin()
 
 if __name__ == '__main__':
     try:
         # Initialize ROS::node
         rospy.init_node('move', anonymous=True)
         rospy.Subscriber("/scan" , LaserScan , callback)
+
         move_robot()
         # spin() enter the program in a infinite loop
-        print("Start move_1_meter.py")
-        #rospy.spin()
+        print("Start ricochet.py")
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
