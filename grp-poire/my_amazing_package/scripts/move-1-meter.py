@@ -23,12 +23,12 @@ def callback(data):
     for value in front : 
         if(value < 0.5):
             if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = FORWARD_SPEED_MPS / value
+                commands.linear.x = FORWARD_SPEED_MPS 
                 commands.angular.z = - FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn right")
                 
             else :
-                commands.linear.x = FORWARD_SPEED_MPS / value
+                commands.linear.x = FORWARD_SPEED_MPS 
                 commands.angular.z = FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn left")
                 
