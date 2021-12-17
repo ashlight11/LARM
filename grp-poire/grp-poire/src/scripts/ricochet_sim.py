@@ -41,14 +41,14 @@ def laserCallback(data):
             point_2D.data = point
             #if the point is really close, speed up and reverse
             if(point[0] < 0.2):
-                commands.linear.x = - 3 * TURN_SPEED_MPS
+                commands.linear.x = - 2 * TURN_SPEED_MPS
+            else : commands.linear.x = TURN_SPEED_MPS
             #if there is more room on the right side, go right
-            if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = TURN_SPEED_MPS
+            if ((numpy.amax(right) > numpy.amax(left) and commands.linear.x > 0 )
+            or (numpy.amax(right) < numpy.amax(left) and commands.linear.x < 0 )):      
                 commands.angular.z = - ANGULAR_TURN
             # else, go left
             else :
-                commands.linear.x = TURN_SPEED_MPS
                 commands.angular.z = ANGULAR_TURN
         # if not dangerous, stay as it is
         else :
@@ -73,14 +73,14 @@ def move_command(data):
     global commands
     commandPublisher.publish(commands)
 
-def display_points():
+def display_points(data):
     global point
     rvizPublisher.publish(point_2D)
 
 if __name__ == '__main__':
     try:
         # Initialize ROS::node
-        rospy.init_node('Move_And_Scan', anonymous=True)
+        rospy.init_node('move', anonymous=True)
         rospy.Subscriber("/scan" , LaserScan , laserCallback)
         commands.linear.x = FORWARD_SPEED_MPS
         rospy.Timer(rospy.Duration(0.1), move_command, oneshot = False)

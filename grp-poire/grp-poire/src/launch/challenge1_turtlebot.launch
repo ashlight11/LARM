@@ -3,16 +3,16 @@
 
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
     
-	<node pkg="my_amazing_package"
-                type="ricochet.py" name="laser_listener"
+	<node pkg="grp-poire"
+                type="ricochet_real.py" name="Move_Node"
                 output="screen"
         />
 
         
     <group if="$(arg rviz)">
-  <!-- stuff that will only be evaluated if foo is true -->
+  <!-- stuff that will only be evaluated if rviz is true -->
   		<node pkg="rviz" type="rviz" name="rviz"
-		args="-d $(find stage_ros)/rviz/stage.rviz"/>
+		args="-d $(find grp-poire)/src/rviz/config_real.rviz"/>
 	</group>
 	<param name="rviz" value="false" unless="$(arg rviz)" />  <!-- This param won't be set when "unless" condition is met -->
 </launch>
