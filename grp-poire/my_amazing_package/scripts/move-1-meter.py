@@ -26,12 +26,12 @@ def callback(data):
                 commands.linear.x = FORWARD_SPEED_MPS / value
                 commands.angular.z = - FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn right")
-                break;
+                
             else :
                 commands.linear.x = FORWARD_SPEED_MPS / value
                 commands.angular.z = FORWARD_SPEED_MPS * laserData.time_increment / value
                 print("turn left")
-                break;
+                
         else :
             commands.linear.x = FORWARD_SPEED_MPS
             commands.angular.z = 0
