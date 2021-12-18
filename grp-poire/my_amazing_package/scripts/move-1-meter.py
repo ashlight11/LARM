@@ -5,9 +5,9 @@ from sensor_msgs.msg import LaserScan
 
 laserData = LaserScan()
 commands = Twist()
-FORWARD_SPEED_MPS = 0.1
-TURN_SPEED_MPS = 0.2
-ANGULAR_TURN = 2
+FORWARD_SPEED_MPS = 0.2
+TURN_SPEED_MPS = 0.08
+ANGULAR_TURN = 4
 
 def callback(data):
     global commands
@@ -21,17 +21,17 @@ def callback(data):
 
 
     for value in front : 
-        if(value < 0.5):
+        if(value < 0.6):
             if (numpy.amax(right) > numpy.amax(left)):
                 commands.linear.x = TURN_SPEED_MPS
                 commands.angular.z = -ANGULAR_TURN
                 print("turn right")
-                break;
+                
             else :
                 commands.linear.x = TURN_SPEED_MPS
                 commands.angular.z = ANGULAR_TURN
-                print("turn left")
-                break;
+                print("turn left", value)
+                
         else :
             commands.linear.x = FORWARD_SPEED_MPS
             commands.angular.z = 0
@@ -58,7 +58,7 @@ def move_robot():
 
 # spin() enter the program in a infinite loop
 print("Start move.py")
-rospy.spin()
+#rospy.spin()
 
 if __name__ == '__main__':
     try:
@@ -68,6 +68,6 @@ if __name__ == '__main__':
         move_robot()
         # spin() enter the program in a infinite loop
         print("Start move_1_meter.py")
-        #rospy.spin()
+        rospy.spin()
     except rospy.ROSInterruptException:
         pass
