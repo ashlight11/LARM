@@ -5,9 +5,9 @@ from sensor_msgs.msg import LaserScan
 
 laserData = LaserScan()
 commands = Twist()
-FORWARD_SPEED_MPS = 0.1
-TURN_SPEED_MPS = 0.2
-ANGULAR_TURN = 2
+FORWARD_SPEED_MPS = 0.2
+TURN_SPEED_MPS = 0.1
+ANGULAR_TURN = 4
 
 def callback(data):
     global commands
@@ -15,22 +15,23 @@ def callback(data):
     laserData = data
 
     nb_values = len(laserData.ranges)
-    right = laserData.ranges[:math.floor(nb_values/3)]
-    front = laserData.ranges[math.floor(nb_values/3):math.floor(2 * nb_values/3)]
-    left = laserData.ranges[math.floor(2 * nb_values/3):]
+    right = laserData.ranges[:math.floor(nb_values/6)]
+    front = laserData.ranges[math.floor(2 * nb_values/6):math.floor(5 * nb_values/6)]
+    left = laserData.ranges[math.floor(5 * nb_values/6):]
 
 
     for value in front : 
-        if(value < 0.5):
+        if(value < 0.6):
             if (numpy.amax(right) > numpy.amax(left)):
-                commands.linear.x = FORWARD_SPEED_MPS 
-                commands.angular.z = - FORWARD_SPEED_MPS * laserData.time_increment / value
-                print("turn right")
-                
+                commands.linear.x = TURN_SPEED_MPS 
+                commands.angular.z = - ANGULAR_TURN
+                print("turn right", commands.angular.z)
+            
             else :
-                commands.linear.x = FORWARD_SPEED_MPS 
-                commands.angular.z = FORWARD_SPEED_MPS * laserData.time_increment / value
-                print("turn left")
+                commands.linear.x = TURN_SPEED_MPS 
+                commands.angular.z = ANGULAR_TURN
+                print("turn left", commands.angular.z)
+        
                 
         else :
             commands.linear.x = FORWARD_SPEED_MPS
@@ -44,6 +45,7 @@ commandPublisher = rospy.Publisher(
 
 # Publish velocity commandes:
 def move_robot():
+    global commands
     # Compute cmd_vel here and publish... (do not forget to reduce timer duration)
     commands.linear.x = FORWARD_SPEED_MPS
     commands.angular.z = 0
