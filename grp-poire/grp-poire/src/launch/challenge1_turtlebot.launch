@@ -12,7 +12,7 @@
     <group if="$(arg rviz)">
   <!-- stuff that will only be evaluated if rviz is true -->
   		<node pkg="rviz" type="rviz" name="rviz"
-		args="-d $(find grp-poire)/src/rviz/config_real.rviz"/>
+		args="-d $(find grp-poire)/src/rviz/config_sim.rviz"/>
 	</group>
 	<param name="rviz" value="false" unless="$(arg rviz)" />  <!-- This param won't be set when "unless" condition is met -->
 </launch>
