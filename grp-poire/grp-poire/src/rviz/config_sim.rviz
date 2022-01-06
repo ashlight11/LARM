@@ -6,8 +6,7 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /LaserScan1
-        - /PointCloud21
+        - /PointCloud1/Status1
       Splitter Ratio: 0.5
     Tree Height: 407
   - Class: rviz/Selection
@@ -90,7 +89,7 @@ Visualization Manager:
         Value: true
       Axis: Z
       Channel Name: intensity
-      Class: rviz/PointCloud2
+      Class: rviz/PointCloud
       Color: 255; 255; 255
       Color Transformer: ""
       Decay Time: 0
@@ -98,12 +97,12 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: PointCloud
       Position Transformer: ""
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.05000000074505806
+      Size (m): 0.009999999776482582
       Style: Flat Squares
       Topic: /rviz_point_cloud
       Unreliable: false
@@ -114,7 +113,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: base_footprint
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -154,9 +153,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.32039782404899597
+      Pitch: 0.2953977584838867
       Target Frame: <Fixed Frame>
-      Yaw: 0.8603979349136353
+      Yaw: 2.100384473800659
     Saved: ~
 Window Geometry:
   Displays:

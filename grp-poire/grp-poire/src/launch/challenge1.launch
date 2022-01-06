@@ -13,7 +13,7 @@
 		<arg name="yaw" value="2.86" />
 	</include>
 
-	<node pkg="grp-poire" type="ricochet_sim.py" name="Moving_Node" output="screen" />
+	<node pkg="grp-poire" type="move.py" name="Moving_Node" output="screen" />
 
 	<group if="$(arg rviz)">
 		<!-- stuff that will only be evaluated if rviz is true -->
@@ -21,6 +21,8 @@
 	</group>
 	<param name="rviz" value="false" unless="$(arg rviz)" type="bool"/> <!-- This param won't be set when "unless" condition is met -->
 
+
+	<param name="mode" value="$(arg mode)" type="str" /> <!-- This param won't be set when "unless" condition is met -->
 </launch>
 
   

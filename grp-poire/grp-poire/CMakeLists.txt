@@ -163,6 +163,7 @@ include_directories(
  catkin_install_python(PROGRAMS
    src/scripts/ricochet_sim.py
    src/scripts/ricochet_real.py
+   src/scripts/move.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
