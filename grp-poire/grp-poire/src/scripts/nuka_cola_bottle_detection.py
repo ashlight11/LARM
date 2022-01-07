@@ -68,7 +68,7 @@ def show_image(img):
     cv.destroyAllWindows()'''
     print("show image")
     marker = Marker()
-    marker.header.frame_id = "base_link"
+    marker.header.frame_id = "odom"
     marker.id = 0
     marker.type = Marker.SPHERE;
     marker.action = Marker.ADD;
