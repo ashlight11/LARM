@@ -1,0 +1,15 @@
+Create positives.txt file : 
+find ./positive_images -iname "*.jpg" > positives.txt
+
+Create negatives.txt file : 
+find ./negative_images -iname "*.jpg" > negatives.txt
+
+Create Annotations :
+opencv_annotation --annotations=./annotations.txt --images=./positive_images
+
+Creates Samples : 
+/home/marianne/libs/opencv/build/bin/opencv_createsamples  -info annotations_b.txt -vec samples/samples.vec
+
+Train Cascade : 
+/home/marianne/libs/opencv/build/bin/opencv_traincascade -data classifier -vec samples/samples.vec -bg negatives.txt -numPos 39 -numNeg 642 -numStages 10 -precalcIdxBufSize 1024 -featureType LBP -precalcValBufSize 1024 -minHitRate 0.999 -maxFalseAlarmRate 0.5
+
