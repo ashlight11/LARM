@@ -62,10 +62,6 @@ Visualization Manager:
           Value: true
         base_link:
           Value: true
-        camera_color_frame:
-          Value: true
-        camera_color_optical_frame:
-          Value: true
         camera_depth_frame:
           Value: true
         camera_depth_optical_frame:
@@ -148,13 +144,11 @@ Visualization Manager:
             base_footprint:
               base_link:
                 camera_rgb_frame:
+                  camera_depth_frame:
+                    camera_depth_optical_frame:
+                      {}
                   camera_link:
-                    camera_color_frame:
-                      camera_color_optical_frame:
-                        {}
-                    camera_depth_frame:
-                      camera_depth_optical_frame:
-                        {}
+                    {}
                   camera_rgb_optical_frame:
                     {}
                 caster_back_link:
@@ -265,7 +259,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
