@@ -20,9 +20,7 @@ class MyNode:
 
     def __init__(self):
         self.tfListener = tf.TransformListener()
-        self.commands = Twist()
-        self.goal = PoseStamped()  # goal in odom
-        self.local_goal = PoseStamped()  # goal in base_footprint
+        self.commands = Twist()  
         self.point_2D = PointCloud()
 
         # publisher for nav commands
@@ -37,11 +35,15 @@ class MyNode:
         rospy.Timer(rospy.Duration(0.1), self.move_command, oneshot=False)
 
     def goal_callback(self, data):
-        global isFollowingGoal
-        self.goal = data
+        global isFollowingGoal 
+        self.goal = data  # PoseStamped goal in odom
+        # rospy.Time(0) constructs a Time instance that has special significance in TF contexts
+        # it will cause lookupTransform(..) and friends to return the latest available data
+        # for a specific transform, instead of the data at a specific point in time.
+        self.goal.header.stamp = rospy.Time(0)
         isFollowingGoal = True
         self.local_goal = self.tfListener.transformPose(
-            "/base_footprint", self.goal)
+            "base_footprint", self.goal) # PoseStamped goal in base_footprint
         print(self.local_goal)
         
 
@@ -50,13 +52,17 @@ class MyNode:
         global isFollowingGoal
         if(isFollowingGoal) : 
             angle_to_goal = math.atan2(self.local_goal.pose.position.y, self.local_goal.pose.position.x)
-            while(abs(angle_to_goal) > 0.1 and isFollowingGoal):
+            self.commands.linear.x = 0.0
+            self.commands.angular.z = angle_to_goal
+            '''while(abs(angle_to_goal) > 0.1 and isFollowingGoal):
                 self.commands.linear.x = 0.0
                 self.commands.angular.z = angle_to_goal
+                
             if abs(angle_to_goal) < 0.1 :
                 self.commands.linear.x = FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0
-                # Find how you know you reached the goal
+                # Find how you know you reached the goal'''
+
         self.commandPublisher.publish(self.commands)
 
 
@@ -91,8 +97,8 @@ class MyNode:
             # go forward (linear velocity)
             
             self.commands.linear.x = FORWARD_SPEED_MPS
-            if not isFollowingGoal :
-                self.commands.angular.z = 0.0  # do not rotate (angular velocity)
+            #if not isFollowingGoal :
+            self.commands.angular.z = 0.0  # do not rotate (angular velocity)
         else:
             self.commands.linear.x = 0.0  # stop
             if (left < thr2):

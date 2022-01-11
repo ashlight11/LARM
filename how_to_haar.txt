@@ -25,3 +25,5 @@ python3 ./mergevec.py -v ./samples/generated_vec -o samples.vec
 Train Cascade :
 /home/marianne/libs/opencv/build/bin/opencv_traincascade -data other_classifier -vec samples.vec -bg negatives.txt -numStages 20 -minHitRate 0.999 -maxFalseAlarmRate 0.5 -numPos 1000 -numNeg 642 -w 40 -h 80 -mode ALL -precalcValBufSize 1024
 
+/home/marianne.de.poorter/opencv_bis/opencv/build/bin
+
