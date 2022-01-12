@@ -6,8 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /TF1
         - /TF1/Frames1
+        - /Marker1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -142,6 +142,14 @@ Visualization Manager:
                 laser_link:
                   {}
       Update Interval: 0
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /bottle
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
