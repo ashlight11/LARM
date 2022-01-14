@@ -3,11 +3,11 @@
 
     <param name="use_sim_time" value="true" />
 
-    <node pkg="rosbag" type="play" name="bag_file" args="--clock $(find grp-poire)/bag/challenge-2.bag"/>
-    
-    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" output="screen"/>
+    <node pkg="rosbag" type="play" name="bag_file" args="--clock $(find grp-poire)/bag/challenge-2.bag" />
 
-    <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen"/>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" output="screen" />
+
+    <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen" />
 
     <group if="$(arg rviz)">
         <!-- stuff that will only be evaluated if foo is true -->
