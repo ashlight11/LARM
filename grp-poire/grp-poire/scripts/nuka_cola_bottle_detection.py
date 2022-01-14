@@ -15,7 +15,8 @@ from cv_bridge import CvBridge, CvBridgeError
 
 class BottleDetection():
     def __init__(self):
-        nuka_cascade_name = "cascade.xml"
+        # /home/marianne.de.poorter/catkin_ws/src/LARM/grp-poire/grp-poire/scripts/cascade.xml
+        nuka_cascade_name = "/home/marianne.de.poorter/catkin_ws/src/LARM/grp-poire/grp-poire/scripts/cascade.xml"
         self.nuka_cascade = cv.CascadeClassifier()
         self.camera_width = 1920.0
         self.camera_height = 1080.0
