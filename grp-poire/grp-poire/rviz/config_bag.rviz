@@ -8,8 +8,6 @@ Panels:
         - /Status1
         - /TF1/Frames1
         - /Marker1
-        - /MarkerArray1
-        - /MarkerArray1/Status1
       Splitter Ratio: 0.5
     Tree Height: 549
   - Class: rviz/Selection
@@ -147,16 +145,8 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: ""
-      Name: Marker
-      Namespaces:
-        {}
-      Queue Size: 100
-      Value: true
-    - Class: rviz/MarkerArray
-      Enabled: true
       Marker Topic: /bottle
-      Name: MarkerArray
+      Name: Marker
       Namespaces:
         {}
       Queue Size: 100
