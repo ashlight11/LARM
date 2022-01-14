@@ -39,16 +39,12 @@ class BottleDetection():
         rospy.Subscriber("/odom", Odometry, self.odomCoordinates)
 
         # publisher for bottle markers
-        '''self.markerPublisher = rospy.Publisher(
-            '/bottle',
-            Marker, queue_size=10
-        )'''
         self.markerPublisher = rospy.Publisher(
             '/bottle',
-            MarkerArray, queue_size=10
+            Marker, queue_size=10
         )
         self.markers_list = list()
-        self.marker_array_msg = MarkerArray()
+        
 
     def detectAndDisplay(self, frame):
         frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -150,33 +146,34 @@ class BottleDetection():
         
         if len(self.markers_list) == 0:
             marker_to_publish = self.generateMarker(pose)
-            #self.markerPublisher.publish(marker_to_publish)
+            self.markerPublisher.publish(marker_to_publish)
             self.markers_list.append(marker_to_publish)
-            self.markerPublisher.publish(self.marker_array_msg)
             #print(self.markers_list)
             #print(len(self.markers_list))
             #print("Marker Published because first one")
 
         for existing_marker in self.markers_list:
             if not self.areInSameArea(existing_marker.pose, pose):
+
+                # Publish new marker because new area explored
                 marker_to_publish = self.generateMarker(pose)
-                #self.markerPublisher.publish(marker_to_publish)
+                self.markerPublisher.publish(marker_to_publish)
                 self.markers_list.append(marker_to_publish)
-                self.markerPublisher.publish(self.marker_array_msg)
                 #print("Marker Published because not in area")
 
             elif self.positionChangedSignificantly(existing_marker.pose, pose):
+
                 # Delete current marker 
                 existing_marker.action = Marker.DELETE
-                #self.markerPublisher.publish(existing_marker)
+                self.markerPublisher.publish(existing_marker)
                 self.markers_list.remove(existing_marker)
                 self.marker_array_msg.markers.append(existing_marker)
-                self.markerPublisher.publish(self.marker_array_msg)
                 #print("Marker Deleted because position changed")
+
+                # Generate new marker to put instead
                 newest_marker = self.generateMarker(pose)
-                #self.markerPublisher.publish(newest_marker)
+                self.markerPublisher.publish(newest_marker)
                 self.markers_list.append(newest_marker)
-                self.markerPublisher.publish(self.marker_array_msg)
                 #print("Marker Published because position changed")
 
     def areInSameArea(self, existing_marker: Pose, new_marker: Pose):
@@ -213,7 +210,6 @@ class BottleDetection():
         marker.color.r = 0.0
         marker.color.g = 1.0
         marker.color.b = 0.0
-        self.marker_array_msg.markers.append(marker) 
         return marker
 
     '''def show_video(self):
