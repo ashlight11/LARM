@@ -80,7 +80,7 @@ class BottleDetection():
             c = max(elements, key=cv.contourArea)
             x,y,w,h = cv.boundingRect(c)
             if w > 10 and y < 500:
-                print("FOUND")
+                #print("FOUND")
                 '''px = frame[math.floor(y), math.floor(x)]
                 px_array = numpy.uint8([[px]])
                 hsv_px = cv.cvtColor(px_array, cv.COLOR_BGR2HSV)
