@@ -5,15 +5,18 @@
         <arg name="world_file" value="$(find larm)/models/challenge-1.world" />
     </include>
 
-    <!-- <node pkg="tf" type="static_transform_publisher" name="base_footprint_in_odom" args="2.3 4.0 0.01 0.8 0.0 0.0 /odom /base_footprint 80" /> 
-    TODO : faire la transformation laser et robot-->
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" />
+
+    <!-- Align laser and base_footprint frames, not needed because already connected -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="odom_publisher_map_odom" args="0.0 0.0 0.1 0.0 0.0 0.0 0.0 base_footprint scan 100" />  -->
+
 
     <node pkg="larm1_slam" type="move_to.py" name="Test_TF" output="screen" />
 
     <include file="$(find tbot_gazebo)/launch/spawn_tbot.launch">
-        <arg name="x" value="-3.32" />
-        <arg name="y" value="-2.95" />
-        <arg name="yaw" value="2.86" />
+        <arg name="x" value="-1" />
+        <arg name="y" value="-2" />
+        <arg name="yaw" value="2" />
     </include> 
 
     <!--<node pkg="turtlebot_teleop" type="turtlebot_teleop_key" name="turtlebot_teleop_keyboard" output="screen"/>-->

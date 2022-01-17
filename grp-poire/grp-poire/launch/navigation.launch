@@ -15,20 +15,22 @@
 	    <arg name="yaw" value="2.86" />
     </include>
 
-    <!-- Map server -->
-    <arg name="map_file" default="$(find grp-poire)/map/dia.yaml"/>
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" output="screen" />
 
-    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+    <!-- Map server -->
+    <!--<arg name="map_file" default="$(find grp-poire)/map/dia.yaml"/>
+
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
 
     <!-- Localization -->
-    <arg name="initial_pose_x" default="0.0" />
+   <!--<arg name="initial_pose_x" default="0.0" />
     <arg name="initial_pose_y" default="0.0" />
     <arg name="initial_pose_a" default="0.0" />
     <include file="$(find grp-poire)/launch/amcl.launch.xml">
         <arg name="initial_pose_x" value="$(arg initial_pose_x)" />
         <arg name="initial_pose_y" value="$(arg initial_pose_y)" />
         <arg name="initial_pose_a" value="$(arg initial_pose_a)" />
-    </include>
+    </include> -->
 
     <!-- Move base -->
     <include file="$(find grp-poire)/launch/move_base.launch.xml"/> 

@@ -41,7 +41,7 @@ def laserCallback(data):
         angle += data.angle_increment
     # rospy.loginfo( str(
         # [[ round(p[0], 2), round(p[1], 2) ] for p in  obstacles[0:10] ]
-    # ) + " ..." )
+    # ) + " ..." )rospy.Subscriber("/odom", Odometry, self.odomCoordinates)
     for point in obstacles:
         point_2D.points.append(point)
         # if point is in a dangerous zone

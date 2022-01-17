@@ -4,17 +4,16 @@ from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan, PointCloud
 from tf.transformations import euler_from_quaternion
+from nav_msgs.msg import Odometry
 import tf
 import math
 import numpy
 
 
-FORWARD_SPEED_MPS = 1
+FORWARD_SPEED_MPS = 2
 ANGULAR_TURN = 1.5
 goal_topic = '/move_base_simple/goal'
 isFollowingGoal = False
-isTurning = False
-
 
 class MyNode:
 
@@ -32,7 +31,28 @@ class MyNode:
 
         rospy.Subscriber("/scan", LaserScan, self.laser_callback)
         rospy.Subscriber(goal_topic, PoseStamped, self.goal_callback)
+        rospy.Subscriber("/odom", Odometry, self.odomCoordinates)
         rospy.Timer(rospy.Duration(0.1), self.move_command, oneshot=False)
+
+    def odomCoordinates(self, data: Odometry):
+        global isFollowingGoal
+        self.current_position = data.pose
+        '''inc_x = self.goal.pose.position.x - data.pose.pose.position.x
+        inc_y = self.goal.pose.position.y - data.pose.pose.position.y
+
+        angle_to_goal = math.atan2(inc_y, inc_x)
+        rot_q = self.goal.pose.orientation
+        (roll, pitch, theta) = euler_from_quaternion([rot_q.x, rot_q.y, rot_q.z, rot_q.w])
+        isFollowingGoal = True
+        while abs(angle_to_goal - theta) > 0.1:
+            self.commands.linear.x = 0.0
+            self.commands.angular.z = 0.4
+            print(abs(angle_to_goal - theta) )
+        isFollowingGoal = False
+
+        self.commands.linear.x = FORWARD_SPEED_MPS 
+        self.commands.angular.z = 0.0'''
+        
 
     def goal_callback(self, data):
         global isFollowingGoal 
@@ -41,33 +61,35 @@ class MyNode:
         # it will cause lookupTransform(..) and friends to return the latest available data
         # for a specific transform, instead of the data at a specific point in time.
         self.goal.header.stamp = rospy.Time(0)
-        isFollowingGoal = True
         self.local_goal = self.tfListener.transformPose(
             "base_footprint", self.goal) # PoseStamped goal in base_footprint
-        print(self.local_goal)
+        #print(self.local_goal)
+        self.angle_to_goal = math.atan2(self.local_goal.pose.position.y, self.local_goal.pose.position.x)
+        print("ANGLE : " + str(self.angle_to_goal))
         
-
-
+        rospy.Timer(rospy.Duration(5), self.turnForGoal, oneshot = True)
+        isFollowingGoal = False
+        a = numpy.array((self.goal.pose.position.x, self.goal.pose.position.y))
+        b = numpy.array((self.current_position.pose.position.x, self.current_position.pose.position.y))
+        dist = numpy.linalg.norm(a-b)
+        '''while(dist > 0.1):
+            self.commands.linear.x = FORWARD_SPEED_MPS / 2
+            self.commands.angular.z = 0
+            self.commandPublisher.publish(self.commands)
+        '''
     def move_command(self, data):
-        global isFollowingGoal
-        if(isFollowingGoal) : 
-            angle_to_goal = math.atan2(self.local_goal.pose.position.y, self.local_goal.pose.position.x)
-            self.commands.linear.x = 0.0
-            self.commands.angular.z = angle_to_goal
-            '''while(abs(angle_to_goal) > 0.1 and isFollowingGoal):
-                self.commands.linear.x = 0.0
-                self.commands.angular.z = angle_to_goal
-                
-            if abs(angle_to_goal) < 0.1 :
-                self.commands.linear.x = FORWARD_SPEED_MPS
-                self.commands.angular.z = 0.0
-                # Find how you know you reached the goal'''
+        self.commandPublisher.publish(self.commands)
 
+    def turnForGoal(self, data):
+        global isFollowingGoal
+        isFollowingGoal = True
+        self.commands.linear.x = 0.0
+        self.commands.angular.z = self.angle_to_goal
         self.commandPublisher.publish(self.commands)
 
 
-    def laser_callback(self, data):
-        global isTurning
+    def laser_callback(self, data : LaserScan):
+        isTurning = False
         global isFollowingGoal
         self.point_2D.points.clear()
         obstacles = []
@@ -88,27 +110,29 @@ class MyNode:
         print('Range data at 15 deg:  {}'.format(left))
         print('Range data at 345 deg: {}'.format(right))
         print('-------------------------------------------')'''
-        thr1 = 0.8  # Laser scan range threshold
-        thr2 = 1
+        thr1 = 1  # Laser scan range threshold
+        thr2 = 1  # Turning threshold
 
-        if front > thr1 and left > thr2 and right > thr2 and not isTurning :  # Checks if there are obstacles in front and
+        if front > thr1 and left > thr2 and right > thr2 and not isTurning  :  # Checks if there are obstacles in front and
             # 15 degrees left and right (Try changing the
             # the angle values as well as the thresholds)
             # go forward (linear velocity)
             
             self.commands.linear.x = FORWARD_SPEED_MPS
-            #if not isFollowingGoal :
-            self.commands.angular.z = 0.0  # do not rotate (angular velocity)
+            if not isFollowingGoal :
+                self.commands.angular.z = 0.0  # do not rotate (angular velocity)
         else:
+            if(front < thr1 / 2) : 
+                self.commands.linear.x = FORWARD_SPEED_MPS / 2 
             self.commands.linear.x = 0.0  # stop
             if (left < thr2):
-                self.commands.angular.z = ANGULAR_TURN  # rotate counter-clockwise
+                self.commands.angular.z = data.angle_max  # rotate counter-clockwise
                 isTurning = True 
             elif (right < thr2):
-                self.commands.angular.z = - ANGULAR_TURN  # rotate clockwise
+                self.commands.angular.z = - data.angle_max # rotate clockwise
                 isTurning = True
            
-            if front > thr1 and left > thr2 and right > thr2 :
+            if front > thr1 and left > thr2 and right > thr2 and not isFollowingGoal:
                 isTurning = False
                 self.commands.linear.x = FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0

@@ -1,4 +1,5 @@
 larm1_slam/bag/
 *.bag
 *.vscode
-larm1_slam
+frames.pdf
+frames.gv
