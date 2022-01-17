@@ -4,7 +4,7 @@ import cv2 as cv
 import argparse
 import numpy
 import math
-import rospy
+import rospy, rospkg
 import tf
 from visualization_msgs.msg import Marker, MarkerArray
 from geometry_msgs.msg import Pose, PoseStamped
@@ -12,10 +12,14 @@ from sensor_msgs.msg import Image
 from nav_msgs.msg import Odometry
 from cv_bridge import CvBridge, CvBridgeError
 
+# get an instance of RosPack with the default search paths
+def get_pkg_path():
+    rospack = rospkg.RosPack()
+    return rospack.get_path('grp-poire')
 
 class BottleDetection():
     def __init__(self):
-        nuka_cascade_name = "/home/marianne.de.poorter/catkin_ws/src/LARM/grp-poire/grp-poire/src/scripts/cascade.xml"
+        nuka_cascade_name = get_pkg_path() + "/scripts/cascade.xml"
         self.nuka_cascade = cv.CascadeClassifier()
         self.camera_width = 1920.0
         self.camera_height = 1080.0
@@ -79,7 +83,7 @@ class BottleDetection():
             c = max(elements, key=cv.contourArea)
             x,y,w,h = cv.boundingRect(c)
             if w > 10 and y < 500:
-                print("FOUND")
+                #print("FOUND")
                 '''px = frame[math.floor(y), math.floor(x)]
                 px_array = numpy.uint8([[px]])
                 hsv_px = cv.cvtColor(px_array, cv.COLOR_BGR2HSV)
