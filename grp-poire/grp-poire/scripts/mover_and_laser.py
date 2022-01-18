@@ -36,7 +36,7 @@ class AutonomousNav():
             #print("In simulation mode")
             self.FORWARD_SPEED_MPS = 2
         else:
-            self.FORWARD_SPEED_MPS = 0.25
+            self.FORWARD_SPEED_MPS = 0.1
 
         self.commands.linear.x = self.FORWARD_SPEED_MPS
         self.commands.angular.z = 0.0
@@ -101,6 +101,7 @@ class AutonomousNav():
         else:
             if(front < thr1 / 2) : 
                 self.commands.linear.x = self.FORWARD_SPEED_MPS / 2 
+                self.commands.angular.z = data.angle_max
             self.commands.linear.x = 0.0  # stop
             if (left < thr2):
                 self.commands.angular.z = data.angle_max  # rotate counter-clockwise

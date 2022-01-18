@@ -87,7 +87,6 @@ class BottleDetectionOnly():
 
     def depthCallback(self, data):
         bridge = CvBridge()
-
         # Try to convert the ROS Image message to a CV2 Image
         try:
             cv_image = bridge.imgmsg_to_cv2(data)
