@@ -7,7 +7,7 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1/Frames1
-        - /Marker1
+        - /PointCloud1
       Splitter Ratio: 0.5
     Tree Height: 407
   - Class: rviz/Selection
@@ -28,7 +28,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: ""
+    SyncSource: LaserScan
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -101,6 +101,12 @@ Visualization Manager:
           Value: true
         base_link:
           Value: false
+        camera_aligned_depth_to_color_frame:
+          Value: true
+        camera_color_frame:
+          Value: true
+        camera_color_optical_frame:
+          Value: true
         camera_depth_frame:
           Value: false
         camera_depth_optical_frame:
@@ -110,67 +116,69 @@ Visualization Manager:
         camera_rgb_frame:
           Value: true
         camera_rgb_optical_frame:
-          Value: true
+          Value: false
         caster_back_link:
-          Value: true
+          Value: false
         caster_front_link:
-          Value: true
+          Value: false
         cliff_sensor_front_link:
-          Value: true
+          Value: false
         cliff_sensor_left_link:
-          Value: true
+          Value: false
         cliff_sensor_right_link:
-          Value: true
+          Value: false
         gyro_link:
+          Value: false
+        laser:
           Value: true
         map:
           Value: false
         mount_xtion_pro_link:
-          Value: true
+          Value: false
         odom:
           Value: true
         plate_bottom_link:
-          Value: true
+          Value: false
         plate_middle_link:
-          Value: true
+          Value: false
         plate_top_link:
-          Value: true
+          Value: false
         pole_bottom_0_link:
-          Value: true
+          Value: false
         pole_bottom_1_link:
-          Value: true
+          Value: false
         pole_bottom_2_link:
-          Value: true
+          Value: false
         pole_bottom_3_link:
-          Value: true
+          Value: false
         pole_bottom_4_link:
-          Value: true
+          Value: false
         pole_bottom_5_link:
-          Value: true
+          Value: false
         pole_kinect_0_link:
-          Value: true
+          Value: false
         pole_kinect_1_link:
-          Value: true
+          Value: false
         pole_middle_0_link:
-          Value: true
+          Value: false
         pole_middle_1_link:
-          Value: true
+          Value: false
         pole_middle_2_link:
-          Value: true
+          Value: false
         pole_middle_3_link:
-          Value: true
+          Value: false
         pole_top_0_link:
-          Value: true
+          Value: false
         pole_top_1_link:
-          Value: true
+          Value: false
         pole_top_2_link:
-          Value: true
+          Value: false
         pole_top_3_link:
-          Value: true
+          Value: false
         wheel_left_link:
-          Value: true
+          Value: false
         wheel_right_link:
-          Value: true
+          Value: false
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -183,11 +191,15 @@ Visualization Manager:
             base_footprint:
               base_link:
                 camera_rgb_frame:
-                  camera_depth_frame:
-                    camera_depth_optical_frame:
-                      {}
                   camera_link:
-                    {}
+                    camera_aligned_depth_to_color_frame:
+                      camera_color_optical_frame:
+                        {}
+                    camera_color_frame:
+                      {}
+                    camera_depth_frame:
+                      camera_depth_optical_frame:
+                        {}
                   camera_rgb_optical_frame:
                     {}
                 caster_back_link:
@@ -201,6 +213,8 @@ Visualization Manager:
                 cliff_sensor_right_link:
                   {}
                 gyro_link:
+                  {}
+                laser:
                   {}
                 mount_xtion_pro_link:
                   {}
@@ -253,8 +267,36 @@ Visualization Manager:
       Marker Topic: /bottle
       Name: Marker
       Namespaces:
-        {}
+        "": true
       Queue Size: 100
+      Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud
+      Color: 255; 255; 255
+      Color Transformer: ""
+      Decay Time: 0
+      Enabled: true
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud
+      Position Transformer: ""
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.009999999776482582
+      Style: Flat Squares
+      Topic: /rviz_point_cloud
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
       Value: true
   Enabled: true
   Global Options:
@@ -284,7 +326,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.1647839546203613
+      Distance: 4.112849235534668
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -300,9 +342,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4647975564002991
+      Pitch: 0.47979736328125
       Target Frame: <Fixed Frame>
-      Yaw: 3.5085558891296387
+      Yaw: 3.1085739135742188
     Saved: ~
 Window Geometry:
   Displays:

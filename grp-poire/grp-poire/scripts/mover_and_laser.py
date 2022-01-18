@@ -49,7 +49,7 @@ class AutonomousNav():
 
         rospy.Subscriber(laser_topic, LaserScan, self.laser_callback)
 
-        rospy.Timer(rospy.Duration(PUBLISHING_RATE), self.move_command, oneshot=False)
+        #rospy.Timer(rospy.Duration(PUBLISHING_RATE), self.move_command, oneshot=False)
         
 
     def move_command(self, data):
