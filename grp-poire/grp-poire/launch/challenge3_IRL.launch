@@ -10,6 +10,8 @@
 
     <include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
 
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=$(arg laser_topic)" output="screen" />
 
     <node pkg="grp-poire" type="bottle_detection.py" name="bottle_detector"/>
