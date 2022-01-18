@@ -166,6 +166,7 @@ include_directories(
    scripts/move.py
    scripts/nuka_cola_bottle_detection.py
    scripts/bottle_detection.py
+   scripts/mover_and_laser.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 
