@@ -17,7 +17,7 @@
     </include>
     
 
-    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=$(arg laser_topic)" output="screen" />
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=$(arg laser_topic)" />
 
     <node pkg="urg_node" type="urg_node" name="laser"/>
 
@@ -25,7 +25,7 @@
 
     <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen" /> 
 
-    <node pkg="grp-poire" type="mover_and_laser.py" name="autonomous_nav"/>
+    <node pkg="grp-poire" type="mover_and_laser_v2.py" name="autonomous_nav" output="screen"/>
 
     <group if="$(arg rviz)">
         <!-- stuff that will only be evaluated if rviz is true -->

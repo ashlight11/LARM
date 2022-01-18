@@ -36,7 +36,7 @@ class AutonomousNav():
             #print("In simulation mode")
             self.FORWARD_SPEED_MPS = 2
         else:
-            self.FORWARD_SPEED_MPS = 0.1
+            self.FORWARD_SPEED_MPS = 0.15
 
         self.commands.linear.x = self.FORWARD_SPEED_MPS
         self.commands.angular.z = 0.0
@@ -75,9 +75,16 @@ class AutonomousNav():
             angle += data.angle_increment     
         for point in obstacles:
             self.point_2D.points.append(point)  
-        front = data.ranges[0]
-        left = data.ranges[15]
-        right = data.ranges[345]
+        left = data.ranges[15:30] 
+        left_front = data.ranges[180:200]
+        front = data.ranges[350:360]
+        front_right = data.ranges[550:570]
+        right = data.ranges[685:700]
+        left_m = numpy.mean(left)
+        front_m = numpy.mean(front)
+        front_m = numpy.mean(front)
+        right_m = numpy.mean(right)
+        print(len(data.ranges))
         '''print('-------------------------------------------')
         print('Range data at 0 deg:   {}'.format(front))
         print('Range data at 15 deg:  {}'.format(left))
@@ -87,31 +94,43 @@ class AutonomousNav():
         if(self.mode) : # if in simulation mode
             thr1 = 1  # Laser scan range threshold
             thr2 = 1  # Turning threshold
+            min_detection_thresh = 0
         else : # eventually adapt these parameters IRL
-            thr1 = 1  # Laser scan range threshold
-            thr2 = 1  # Turning threshold
+            thr1 = 0.4  # Laser scan range threshold
+            thr2 = 0.25  # Turning threshold
+            min_detection_thresh = 0.03
 
-        if front > thr1 and left > thr2 and right > thr2 and not isTurning  :  # Checks if there are obstacles in front and
+        if front_m > thr1 and left_m > thr2 and right_m > thr2 and not isTurning  :  # Checks if there are obstacles in front and
             # 15 degrees left and right (Try changing the
             # the angle values as well as the thresholds)
             # go forward (linear velocity)
-            
+            print("GO STRAIGHT")
             self.commands.linear.x = self.FORWARD_SPEED_MPS
             self.commands.angular.z = 0.0  # do not rotate (angular velocity)
         else:
-            if(front < thr1 / 2) : 
-                self.commands.linear.x = self.FORWARD_SPEED_MPS / 2 
-                self.commands.angular.z = data.angle_max
-            self.commands.linear.x = 0.0  # stop
-            if (left < thr2):
+            if(front_m < thr1 and front_m > min_detection_thresh) : 
+                self.commands.linear.x = 0.0 
+                if(left < right) :
+                    print("SLIGHT TURN UP FRONT RIGHT " + str (front) )
+                    self.commands.angular.z = - data.angle_max
+                    isTurning = True
+                else :
+                    print("SLIGHT TURN UP FRONT LEFT " + str (right))
+                    self.commands.angular.z =  data.angle_max
+            if (left_m < thr2 and left_m > min_detection_thresh and not isTurning) or ():
+                print("ROTATE RIGHT " + str(left))
+                self.commands.linear.x = 0.0  # stop
                 self.commands.angular.z = data.angle_max  # rotate counter-clockwise
                 isTurning = True 
-            elif (right < thr2):
+            elif (right_m < thr2 and right_m > min_detection_thresh and not isTurning):
+                print("ROTATE LEFT" + str(right))
+                self.commands.linear.x = 0.0  # stop
                 self.commands.angular.z = - data.angle_max # rotate clockwise
                 isTurning = True
            
-            if front > thr1 and left > thr2 and right > thr2:
+            if front_m > thr1 and (left_m > thr2 or left_m < min_detection_thresh) and (right_m > thr2 or right_m < min_detection_thresh):
                 isTurning = False
+                print("GO STRAIGHT")
                 self.commands.linear.x = self.FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0
 
