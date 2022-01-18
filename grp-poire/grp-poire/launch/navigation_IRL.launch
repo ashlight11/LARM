@@ -1,38 +1,20 @@
 <launch>
-    <!-- <param name="use_sim_time" value="true" /> -->
+    <param name="use_sim_time" value="true" />
 
-    <!--<include file="$(find turtlebot_bringup)/launch/minimal.launch" />-->
+    <arg name="rviz" default="true" />
+    <param name="rviz" value="$(arg rviz)" unless="$(arg rviz)" />
 
-    <!-- <env name="GAZEBO_RESOURCE_PATH" value="$(env HOME)/.gazebo" /> -->
-	<!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
-	<include file="$(find tbot_gazebo)/launch/start_world.launch">
-		<arg name="world_file" value="$(find larm)/models/challenge-1.world" />
-	</include>
+    <include file="$(find tbot_bringup)/launch/start.launch" />
 
-    <include file="$(find tbot_gazebo)/launch/spawn_tbot.launch">
-	    <arg name="x" value="-3.32" />
-	    <arg name="y" value="-2.95" />
-	    <arg name="yaw" value="2.86" />
-    </include>
-
+    
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" output="screen" />
 
-    <!-- Map server -->
-    <!--<arg name="map_file" default="$(find grp-poire)/map/dia.yaml"/>
-
-    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />-->
-
-    <!-- Localization -->
-   <!--<arg name="initial_pose_x" default="0.0" />
-    <arg name="initial_pose_y" default="0.0" />
-    <arg name="initial_pose_a" default="0.0" />
-    <include file="$(find grp-poire)/launch/amcl.launch.xml">
-        <arg name="initial_pose_x" value="$(arg initial_pose_x)" />
-        <arg name="initial_pose_y" value="$(arg initial_pose_y)" />
-        <arg name="initial_pose_a" value="$(arg initial_pose_a)" />
-    </include> -->
-
     <!-- Move base -->
-    <include file="$(find grp-poire)/launch/move_base.launch.xml"/> 
+    <include file="$(find grp-poire)/launch/move_base.launch.xml" />
+
+    <group if="$(arg rviz)">
+        <!-- stuff that will only be evaluated if rviz is true -->
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find grp-poire)/rviz/config_challenge3_IRL.rviz" />
+    </group>
 
 </launch>

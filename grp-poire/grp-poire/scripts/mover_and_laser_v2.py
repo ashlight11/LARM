@@ -38,7 +38,7 @@ class AutonomousNav():
             #print("In simulation mode")
             self.FORWARD_SPEED_MPS = 2
         else:
-            self.FORWARD_SPEED_MPS = 0.15
+            self.FORWARD_SPEED_MPS = 0.2
 
         self.commands.linear.x = self.FORWARD_SPEED_MPS
         self.commands.angular.z = 0.0
@@ -51,7 +51,7 @@ class AutonomousNav():
 
         rospy.Subscriber(laser_topic, LaserScan, self.laser_callback)
 
-        rospy.Timer(rospy.Duration(PUBLISHING_RATE), self.move_command, oneshot=False)
+        #rospy.Timer(rospy.Duration(PUBLISHING_RATE), self.move_command, oneshot=False)
         
 
     def move_command(self, data):
@@ -74,7 +74,7 @@ class AutonomousNav():
             thr2 = 1  # Turning threshold
         
         else : # eventually adapt these parameters IRL
-            thr1 = 0.4  # Laser scan range threshold
+            thr1 = 0.3  # Laser scan range threshold
             thr2 = 0.25  # Turning threshold
 
         for index, aDistance in enumerate(data.ranges):
@@ -87,48 +87,36 @@ class AutonomousNav():
             angle += data.angle_increment 
             
             if(aDistance < thr1 and aDistance >= data.range_min):
-                if index in range(200, math.floor(len(data.ranges)/2)) : #and (((index * 0.36 - 150 * 0.36) * math.pi / 180) > 0.1)
+                if index in range(200, math.floor(len(data.ranges)/2)) : 
                     if ((index * 0.36 - 200 * 0.36) * math.pi / 180) > angle_right : 
                         angle_right = (index * 0.36 - 200 * 0.36) * math.pi / 180
                     self.isTurning = True
-                    '''self.commands.linear.x = 0.0
-                    self.commands.angular.z = (index * 0.36 - 200 * 0.36) * math.pi / 180
-                    self.commandPublisher.publish(self.commands)
+                elif index in range(math.floor(len(data.ranges)/2), 580) :
                     self.isTurning = True
-                    print("TURN RIGHT : " + str(self.commands.angular.z))
-                    break'''
-                elif(index in range(math.floor(len(data.ranges)/2), 420)) : #and (((index * 0.36 - 550 * 0.36) * math.pi / 180) > 0.1)
-                    self.isTurning = True
-                    if ((index * 0.36 - 420 * 0.36) * math.pi / 180) > angle_left : 
-                        angle_left = (index * 0.36 - 420 * 0.36) * math.pi / 180
-                    '''self.commands.linear.x = 0.0
-                    self.commands.angular.z = (index * 0.36 - 420 * 0.36) * math.pi / 180
-                    self.commandPublisher.publish(self.commands)
-                    self.isTurning = True
-                    print("TURN LEFT : " + str(self.commands.angular.z))
-                    break'''
+                    if (abs((index * 0.36 - 580 * 0.36) * math.pi / 180)) > abs(angle_left) : 
+                        angle_left = (index * 0.36 - 580 * 0.36) * math.pi / 180
                 else : 
-                    #print("GO FORWARD")
-                    self.isTurning = False
+                    #self.isTurning = False
                     self.commands.linear.x = self.FORWARD_SPEED_MPS
                     self.commands.angular.z = 0.0
+                    #self.commandPublisher.publish(self.commands)
             else : 
                 #print("GO FORWARD")
                 self.isTurning = False
                 self.commands.linear.x = self.FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0
+        #print("ANGLE LEFT " + str(angle_left) + " ANGLE RIGHT : " + str(angle_right))
         if abs(angle_left)> abs(angle_right) :
             self.isTurning = True
-            print("TURN LEFT")
             self.commands.angular.z = angle_left
             self.commands.linear.x = 0.0
-            self.commandPublisher.publish(self.commands)
+            #self.commandPublisher.publish(self.commands)
         elif angle_right != 0.0 :
             self.isTurning = True
-            print("TURN RIGHT")
             self.commands.angular.z = angle_right
             self.commands.linear.x = 0.0
-            self.commandPublisher.publish(self.commands)
+            #self.commandPublisher.publish(self.commands)
+        self.commandPublisher.publish(self.commands)
         
 
         for point in obstacles:
