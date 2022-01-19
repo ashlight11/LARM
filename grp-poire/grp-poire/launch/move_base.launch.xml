@@ -6,6 +6,7 @@
     <arg name="global_frame_id" default="map"/>
     <arg name="odom_topic" default="odom" />
     <arg name="laser_topic" default="scan" />
+    <arg name="cmd_topic" default="/cmd_vel_mux/input/navi"/>
     <arg name="custom_param_file" default="$(find grp-poire)/param/dummy.yaml"/>
   
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
@@ -26,8 +27,9 @@
       <param name="local_costmap/global_frame" value="$(arg odom_frame_id)"/>
       <param name="local_costmap/robot_base_frame" value="$(arg base_frame_id)"/>
       <param name="DWAPlannerROS/global_frame_id" value="$(arg odom_frame_id)"/>
+      <param name="cmd_topic" value="$(arg cmd_topic)"/>
   
-      <!-- <remap from="cmd_vel" to="/cmd_vel_mux/input/navi"/> -->
+      <remap from="cmd_vel" to="$(arg cmd_topic)"/>
       <remap from="odom" to="$(arg odom_topic)"/>
       <remap from="scan" to="$(arg laser_topic)"/>
     </node>

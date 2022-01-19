@@ -1,7 +1,6 @@
 from __future__ import print_function
-from os import posix_fadvise
 import numpy
-import rospy, rospkg
+import rospy
 import tf
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import Pose, PoseStamped
@@ -16,6 +15,7 @@ class MarkerPublisher():
             Marker, queue_size=10
         )
         self.markers_list = list()
+
 
     def handle_markers(self, pose: Pose):
         
@@ -46,7 +46,6 @@ class MarkerPublisher():
                 existing_marker.action = Marker.DELETE
                 self.markerPublisher.publish(existing_marker)
                 self.markers_list.remove(existing_marker)
-                
                 #print("Marker Deleted because position changed")
                 newest_marker = self.generateMarker(pose)
                 self.markerPublisher.publish(newest_marker)
@@ -67,6 +66,7 @@ class MarkerPublisher():
         bool_val = abs(existing_marker.position.x - new_marker.position.x) > 0.2 or abs(existing_marker.position.y - new_marker.position.y) > 0.4
         #print("!!!! CHANGED : " + str(bool_val))
         return bool_val
+
 
     def generateMarker(self, pose: Pose):
         pose_stamped = PoseStamped ()

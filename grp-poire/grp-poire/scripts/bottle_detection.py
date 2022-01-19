@@ -4,10 +4,11 @@ from tkinter import Frame
 import cv2 as cv
 import numpy
 import math
+import datetime
 import rospy, rospkg
 from geometry_msgs.msg import Pose
 from sensor_msgs.msg import Image
-from nav_msgs.msg import Odometry
+from kobuki_msgs.msg import Led
 from cv_bridge import CvBridge, CvBridgeError
 
 
@@ -32,12 +33,14 @@ class BottleDetectionOnly():
         rospy.Subscriber("/camera/aligned_depth_to_color/image_raw", Image, self.depthCallback)
         rospy.Subscriber("camera/color/image_raw", Image, self.rgbImageCallback)
         self.posePublisher = rospy.Publisher("alert_bottle", Pose, queue_size=10)
+        self.ledPublisher = rospy.Publisher("/mobile_base/commands/led1", Led, queue_size=10)
         self.imagePublisher = rospy.Publisher("bottle_images", Image, queue_size=10)
 
     def detectAndDisplay(self, frame):
         frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
         frame_gray = cv.equalizeHist(frame_gray)
         color_info = (255, 255, 255)
+        
 
         # -- Detect black bottles
         bottles = self.nuka_cascade.detectMultiScale(
@@ -51,6 +54,8 @@ class BottleDetectionOnly():
                 estimated_pose = self.estimatePose(x,y, w, h)
                 self.posePublisher.publish(estimated_pose)
                 self.sendImage(frame)
+                self.turnOnLed()
+                self.latestTurnOn = datetime.datetime.now()
                 '''cv.imshow('Capture - Black Cola detection', frame)
                 cv.waitKey(400)'''
                 
@@ -72,8 +77,16 @@ class BottleDetectionOnly():
                 estimated_pose = self.estimatePose(x,y, w, h)
                 self.posePublisher.publish(estimated_pose)
                 self.sendImage(frame)
+                self.turnOnLed()
+                self.latestTurnOn = datetime.datetime.now()
                 '''cv.imshow('Capture - Orange Cola detection', frame)
                 cv.waitKey(400)'''
+        try:
+           if (datetime.datetime.now() - self.latestTurnOn).total_seconds() > 1.0 :
+            self.turnOffLed()
+        except AttributeError:
+            pass
+        
 
     def estimatePose(self, x, y, w, h):
         # process the detections
@@ -88,6 +101,17 @@ class BottleDetectionOnly():
         estimated_pose.position.x = distance / 1000 * math.cos(angle) # equals distance * cos(angle from middle of camera)
         estimated_pose.position.y = distance / 1000 * math.sin(angle)  # equals distance * sin(angle from middle of camera)
         return estimated_pose
+    
+    def turnOnLed(self):
+        led = Led()
+        led.value = Led.GREEN
+        self.ledPublisher.publish(led)
+
+    def turnOffLed(self):
+        led = Led()
+        led.value = Led.BLACK
+        self.ledPublisher.publish(led)
+
 
     def sendImage(self, frame):
         bridge = CvBridge()

@@ -159,25 +159,28 @@ class AutonomousNav():
                                       0.36) * math.pi / 180
                 else:
                     #self.isTurning = False
-                    self.commands.linear.x = self.FORWARD_SPEED_MPS
+                    if(self.commands.linear.x < self.FORWARD_SPEED_MPS) :
+                        self.commands.linear.x += self.FORWARD_SPEED_MPS / 4
+                    else :
+                        self.commands.linear.x = self.FORWARD_SPEED_MPS
                     self.commands.angular.z = 0.0
-                    # self.commandPublisher.publish(self.commands)
             else:
                 #print("GO FORWARD")
                 self.isTurning = False
-                self.commands.linear.x = self.FORWARD_SPEED_MPS
+                if(self.commands.linear.x < self.FORWARD_SPEED_MPS) :
+                    self.commands.linear.x += self.FORWARD_SPEED_MPS / 4
+                else :
+                    self.commands.linear.x = self.FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0
         #print("ANGLE LEFT " + str(angle_left) + " ANGLE RIGHT : " + str(angle_right))
         if abs(angle_left) > abs(angle_right):
             self.isTurning = True
             self.commands.angular.z = angle_left
             self.commands.linear.x = 0.0
-            # self.commandPublisher.publish(self.commands)
         elif angle_right != 0.0:
             self.isTurning = True
             self.commands.angular.z = angle_right
             self.commands.linear.x = 0.0
-            # self.commandPublisher.publish(self.commands)
         self.commandPublisher.publish(self.commands)
 
         for point in obstacles:
