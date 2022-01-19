@@ -9,7 +9,7 @@
     <!-- <env name="GAZEBO_RESOURCE_PATH" value="$(env HOME)/.gazebo" /> -->
     <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable -->
     <include file="$(find tbot_gazebo)/launch/start_world.launch">
-        <arg name="world_file" value="$(find larm)/models/challenge-1.world" />
+        <arg name="world_file" value="$(find larm)/models/challenge-2.world" />
     </include>
 
     <include file="$(find tbot_gazebo)/launch/spawn_tbot.launch">

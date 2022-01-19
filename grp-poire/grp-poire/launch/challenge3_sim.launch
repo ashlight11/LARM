@@ -10,7 +10,7 @@
 
     <!-- NEED TO ADD GAZEBO -->
     <include file="$(find tbot_gazebo)/launch/start_world.launch">
-        <arg name="world_file" value="$(find larm)/models/challenge-1.world" />
+        <arg name="world_file" value="$(find larm)/models/challenge-2.world" />
     </include>
 
     <include file="$(find tbot_gazebo)/launch/spawn_tbot.launch">
@@ -29,7 +29,7 @@
 
     <group if="$(arg rviz)">
         <!-- stuff that will only be evaluated if rviz is true -->
-        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find grp-poire)/rviz/config_bag.rviz" />
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find grp-poire)/rviz/config_challenge3_sim.rviz" />
     </group>
 
     

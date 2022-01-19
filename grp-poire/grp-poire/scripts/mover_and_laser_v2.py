@@ -92,7 +92,7 @@ class AutonomousNav():
         print('Range data at 345 deg: {}'.format(right))
         print('-------------------------------------------')'''
 
-        thr1 = 1  # Laser scan range threshold
+        thr1 = 0.6  # Laser scan range threshold
         thr2 = 1  # Turning threshold
 
         # Checks if there are obstacles in front and
@@ -102,14 +102,13 @@ class AutonomousNav():
             self.commands.linear.x = self.FORWARD_SPEED_MPS
             self.commands.angular.z = 0.0  # do not rotate (angular velocity)
         else:
-            
-            '''if(front < thr1):
+            if(front < thr1):
                 self.commands.linear.x = 0.0
                 if(left < right):
-                    self.commands.angular.z = - data.angle_max
+                    self.commands.angular.z = data.angle_max
                     isTurning = True
                 else:
-                    self.commands.angular.z = data.angle_max'''
+                    self.commands.angular.z = - data.angle_max
             if (left < thr2):
 
                 self.commands.linear.x = 0.0  # stop
@@ -134,12 +133,10 @@ class AutonomousNav():
         angle_right = 0
         if(self.mode):  # if in simulation mode
             thr1 = 1  # Laser scan range threshold
-            thr2 = 1  # Turning threshold
 
         else:  # eventually adapt these parameters IRL
             thr1 = 0.3  # Laser scan range threshold
-            thr2 = 0.25  # Turning threshold
-
+        
         for index, aDistance in enumerate(data.ranges):
             if 0.1 < aDistance and aDistance < 2.0:
                 aPoint = Point32()
