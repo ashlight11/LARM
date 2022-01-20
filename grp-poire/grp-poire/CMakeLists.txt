@@ -161,12 +161,8 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
  catkin_install_python(PROGRAMS
-   scripts/ricochet_sim.py
-   scripts/ricochet_real.py
-   scripts/move.py
-   scripts/nuka_cola_bottle_detection.py
+   scripts/marker_publisher.py
    scripts/bottle_detection.py
-   scripts/mover_and_laser.py
    scripts/mover_and_laser_v2.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )

@@ -23,7 +23,7 @@
 
     <node pkg="grp-poire" type="bottle_detection.py" name="bottle_detector"/>
 
-    <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen" /> 
+    <node pkg="grp-poire" type="marker_publisher.py" name="marker_publisher" output="screen" /> 
 
     <node pkg="grp-poire" type="mover_and_laser_v2.py" name="autonomous_nav" output="screen"/>
 

@@ -8,9 +8,9 @@
     <param name="simulation" value="$(arg simulation)" type="bool" /> 
     <param name="rviz" value="$(arg rviz)" unless="$(arg rviz)" /> <!-- This param won't be set when "unless" condition is met -->
 
-    <!-- NEED TO ADD GAZEBO -->
+    <!-- Gazebo : simulation tool -->
     <include file="$(find tbot_gazebo)/launch/start_world.launch">
-        <arg name="world_file" value="$(find larm)/models/challenge-2.world" />
+        <arg name="world_file" value="$(find larm)/models/challenge-1.world" />
     </include>
 
     <include file="$(find tbot_gazebo)/launch/spawn_tbot.launch">
@@ -20,10 +20,6 @@
     </include>
     
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=$(arg laser_topic)" output="screen" />
-
-    <!--<node pkg="grp-poire" type="bottle_detection.py" name="bottle_detector"/>
-
-    <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen" />-->
 
     <node pkg="grp-poire" type="mover_and_laser_v2.py" name="autonomous_nav"/>
 

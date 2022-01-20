@@ -19,7 +19,7 @@ def get_pkg_path():
 
 class BottleDetectionOnly():
     def __init__(self) :
-        nuka_cascade_name = get_pkg_path() + "/scripts/cascade.xml"
+        nuka_cascade_name = get_pkg_path() + "XML_model/cascade.xml"
         self.nuka_cascade = cv.CascadeClassifier()
         self.camera_width = 1920.0
         self.camera_height = 1080.0
