@@ -168,6 +168,7 @@ include_directories(
    scripts/bottle_detection.py
    scripts/mover_and_laser.py
    scripts/mover_and_laser_v2.py
+   scripts/mover_and_laser_v3.py
    DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
  )
 

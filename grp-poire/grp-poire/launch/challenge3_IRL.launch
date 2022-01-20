@@ -25,7 +25,7 @@
 
     <node pkg="grp-poire" type="nuka_cola_bottle_detection.py" name="marker_publisher" output="screen" /> 
 
-    <node pkg="grp-poire" type="mover_and_laser_v2.py" name="autonomous_nav" output="screen"/>
+    <node pkg="grp-poire" type="mover_and_laser_v3.py" name="autonomous_nav" output="screen"/>
 
     <group if="$(arg rviz)">
         <!-- stuff that will only be evaluated if rviz is true -->
