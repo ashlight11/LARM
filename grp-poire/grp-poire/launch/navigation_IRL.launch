@@ -1,5 +1,9 @@
 <launch>
 
+    <!-- Launch File to use for IRL Demo with a Turtlebot Base : Move Base goal-based navigation -->
+    <!-- WARNING : Turns in circles only, known bug, not functional -->
+
+    <!-- Setup the turtlebot -->
     <include file="$(find tbot_bringup)/launch/start.launch" />
 
     <!-- Move base -->
@@ -7,15 +11,16 @@
         <arg name="cmd_topic" value="/mobile_base/commands/velocity" />
     </include>
     
-    <!-- GMapping -->
+    <!-- Map the environment -->
     <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" args="scan:=/scan" output="screen" />
 
-    <!-- Bottle Detection : Image Processing -->
+    <!-- Image Processing script -->
     <node pkg="grp-poire" type="bottle_detection.py" name="bottle_detector"/>
 
     <!-- Rviz : Vizualization Tool -->
     <node pkg="rviz" type="rviz" name="rviz" args="-d $(find grp-poire)/rviz/config_move_base_IRL.rviz" />
 
+    <!-- Marker Publishing script -->
     <node pkg="grp-poire" type="marker_publisher.py" name="marker_publisher" output="screen" />
 
 </launch>
