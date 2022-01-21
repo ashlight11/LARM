@@ -1,11 +1,14 @@
 from os import name
 import rospy
+from geometry_msgs.msg import PoseStamped
 from geometry_msgs.msg import Twist, Point32
 from sensor_msgs.msg import LaserScan, PointCloud
 from tf.transformations import euler_from_quaternion
+from nav_msgs.msg import Odometry
+from std_msgs.msg import Header
 import tf
 import math
-
+import numpy
 
 
 PUBLISHING_RATE = 0.1
@@ -132,7 +135,7 @@ class AutonomousNav():
             thr1 = 1  # Laser scan range threshold
 
         else:  # eventually adapt these parameters IRL
-            thr1 = 0.3  # Laser scan range threshold
+            thr1 = 0.4  # Laser scan range threshold
         
         for index, aDistance in enumerate(data.ranges):
             if 0.1 < aDistance and aDistance < 2.0:
@@ -170,14 +173,18 @@ class AutonomousNav():
                     self.commands.linear.x = self.FORWARD_SPEED_MPS
                 self.commands.angular.z = 0.0
         #print("ANGLE LEFT " + str(angle_left) + " ANGLE RIGHT : " + str(angle_right))
+        if (angle_left != 0 and angle_right != 0):
+            self.isTurning = True
+            self.commands.angular.z = data.angle_max + 0.1
+            self.commands.linear.x  = self.FORWARD_SPEED_MPS/4
         if abs(angle_left) > abs(angle_right):
             self.isTurning = True
-            self.commands.angular.z = angle_left
-            self.commands.linear.x = 0.0
+            self.commands.angular.z = angle_left + 0.1
+            self.commands.linear.x = self.FORWARD_SPEED_MPS / 4
         elif angle_right != 0.0:
             self.isTurning = True
-            self.commands.angular.z = angle_right
-            self.commands.linear.x = 0.0
+            self.commands.angular.z = angle_right + 0.1
+            self.commands.linear.x = self.FORWARD_SPEED_MPS / 4
         self.commandPublisher.publish(self.commands)
 
         for point in obstacles:
@@ -186,5 +193,6 @@ class AutonomousNav():
 
 if __name__ == '__main__':
     rospy.init_node('Move and Avoid Obstacles', anonymous=True)
+    input("Press Enter to continue...")
     node = AutonomousNav()
     rospy.spin()
