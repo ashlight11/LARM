@@ -8,3 +8,5 @@ Ros project with a Kobuki base.
 Please refer to the branches for more information.
 Branch *Challenge 3* is the most complete out of the four.
 
+Credits : Marwa Hafsi & Marianne De Poorter
+
