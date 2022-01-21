@@ -202,6 +202,5 @@ class AutonomousNav():
 if __name__ == '__main__':
     rospy.init_node('Move and Avoid Obstacles', anonymous=True)
     # Wait for user key press, useful to setup screen recording before robot is moving
-    input("Press Enter to continue...") 
     node = AutonomousNav()
     rospy.spin()
