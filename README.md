@@ -1,5 +1,7 @@
 # Branch challenge 3 dedicated to Final Challenge : Bottle Detection, Autonomous Navigation and Goal Targeting
 
+## Explanations and Demo Video : 
+
 ## This repository contains four programs in the form of four ROS launch files.
 There are located in the package "grp-poire", in the folder "launch". 
 Their purposes are :
@@ -11,7 +13,7 @@ Their purposes are :
 Extra launch files : 
   -"navigation.launch" launches a Gazebo simulation, as well as Rviz. It implements the move-base module as well as GMapping. Usage : 
  > roslaunch grp-poire navigation.launch
-  -"navigation_IRL.launch" launches the nodes to set up the Kobuki base, to control the sensors and the move-base node. Also launches Rviz because 2D goals need to be set !! Warning !! It is not fully functional as move-base only sends velocity commands in z rotation. We kept it here to showcase our effort. Usage : 
+ -"navigation_IRL.launch" launches the nodes to set up the Kobuki base, to control the sensors and the move-base node. Also launches Rviz because 2D goals need to be set !! Warning !! It is not fully functional as move-base only sends velocity commands in z rotation. We kept it here to showcase our effort. Usage : 
  > roslaunch grp-poire navigation_IRL.launch
   
 If the rviz parameter is set to true, it launches a visualization with rviz tool in a specific config rviz file. The Rviz files can be found in the "grp-poire" package under the "rviz" folder.
